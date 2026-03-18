@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install deps first (layer cache — only re-runs if package.json changes)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # ── Runtime stage ────────────────────────────────────────────
 FROM node:20-alpine
