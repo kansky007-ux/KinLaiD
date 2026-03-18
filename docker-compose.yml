@@ -1,0 +1,79 @@
+version: '3.9'
+
+services:
+
+  # ── PostgreSQL ─────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: lunchdrop-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-lunchdrop}
+      POSTGRES_USER:     ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"          # ลบ port นี้ใน production ได้เลย
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-lunchdrop}"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+    networks:
+      - lunchdrop-net
+
+  # ── Backend (Express API) ──────────────────────────────────
+  backend:
+    build:
+      context:    ./backend
+      dockerfile: Dockerfile
+    container_name: lunchdrop-api
+    restart: unless-stopped
+    environment:
+      PORT:         4000
+      DB_HOST:      postgres
+      DB_PORT:      5432
+      DB_NAME:      ${DB_NAME:-lunchdrop}
+      DB_USER:      ${DB_USER:-postgres}
+      DB_PASSWORD:  ${DB_PASSWORD:-postgres}
+      ADMIN_KEY:    ${ADMIN_KEY:-lunch-admin-2024}
+      FRONTEND_URL: ${FRONTEND_URL:-*}
+      NODE_ENV:     ${NODE_ENV:-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4000:4000"          # expose สำหรับ dev — nginx proxies ใน production
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4000/api/health || exit 1"]
+      interval: 30s
+      timeout:  5s
+      retries:  3
+    networks:
+      - lunchdrop-net
+
+  # ── Frontend (Nginx) ───────────────────────────────────────
+  frontend:
+    build:
+      context:    ./frontend
+      dockerfile: Dockerfile
+    container_name: lunchdrop-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - lunchdrop-net
+
+# ── Volumes ───────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    name: lunchdrop-postgres-data
+
+# ── Networks ──────────────────────────────────────────────────
+networks:
+  lunchdrop-net:
+    name: lunchdrop-network
+    driver: bridge

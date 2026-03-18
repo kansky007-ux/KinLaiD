@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>หิวแล้ว! 🍜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:     #FFF9F0;
+  --y:      #FFE23A;
+  --y2:     #FFD000;
+  --o:      #FF7A30;
+  --o2:     #FF5A00;
+  --p:      #C87DFF;
+  --p2:     #A050E0;
+  --g:      #2ECC8A;
+  --g2:     #00A86B;
+  --b:      #38BEFF;
+  --b2:     #0090D4;
+  --pk:     #FF6B9D;
+  --ink:    #1A1A1A;
+  --ink2:   #555;
+  --ink3:   #999;
+  --card:   #FFFFFF;
+  --border: #E8E0D5;
+  --serif:  'Lilita One', cursive;
+  --sans:   'Prompt', sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;min-height:100vh;overflow-x:hidden}
+button{font-family:var(--sans);cursor:pointer;border:none;outline:none}
+input,select{font-family:var(--sans);outline:none}
+*::selection{background:var(--y);color:var(--ink)}
+
+/* ── SQUIGGLY BG ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255,226,58,0.18) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(200,125,255,0.15) 0%, transparent 35%),
+    radial-gradient(circle at 80% 80%, rgba(56,190,255,0.12) 0%, transparent 38%),
+    radial-gradient(circle at 20% 85%, rgba(46,204,138,0.12) 0%, transparent 35%);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── TICKER ── */
+.ticker{
+  background:var(--y);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);
+  overflow:hidden;white-space:nowrap;padding:8px 0;position:relative;z-index:10
+}
+.ticker-inner{display:inline-flex;gap:0;animation:marquee 18s linear infinite}
+.ticker-item{font-family:var(--serif);font-size:13px;color:var(--ink);padding:0 24px;display:flex;align-items:center;gap:10px}
+.ticker-item span{color:var(--o)}
+
+/* ── APP LAYOUT ── */
+.app{position:relative;z-index:1;max-width:940px;margin:0 auto;padding:28px 20px 80px}
+
+/* ── HEADER ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-emoji{font-size:32px;animation:float 3s ease-in-out infinite}
+.logo-text{font-family:var(--serif);font-size:28px;color:var(--ink);line-height:1}
+.logo-text span{color:var(--o)}
+.tagline{font-size:12px;color:var(--ink2);margin-top:2px;font-weight:500}
+.topbar-btns{display:flex;gap:8px;align-items:center}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:99px;font-weight:700;font-size:13px;cursor:pointer;border:2.5px solid var(--ink);transition:all .15s;white-space:nowrap;font-family:var(--sans)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn-y{background:var(--y);color:var(--ink)}.btn-y:hover{background:var(--y2)}
+.btn-o{background:var(--o);color:#fff}.btn-o:hover{background:var(--o2)}
+.btn-p{background:var(--p);color:#fff;border-color:var(--p2)}.btn-p:hover{background:var(--p2)}
+.btn-g{background:var(--g);color:#fff;border-color:var(--g2)}.btn-g:hover{background:var(--g2)}
+.btn-ghost{background:transparent;color:var(--ink2);border:2px solid var(--border)}.btn-ghost:hover{background:#fff;color:var(--ink)}
+.btn-red{background:#FF4D4D;color:#fff;border-color:#CC0000}.btn-red:hover{background:#CC0000}
+.btn-sm{padding:7px 16px;font-size:12px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;pointer-events:none}
+
+/* ── HERO ── */
+.hero{
+  background:var(--y);border:3px solid var(--ink);border-radius:24px;
+  padding:36px 40px;margin-bottom:22px;position:relative;overflow:hidden;
+  box-shadow:6px 6px 0 var(--ink);animation:fadeUp .4s ease both
+}
+.hero::after{
+  content:'🍜🍕🍱🌮🍣🍔';position:absolute;right:-20px;top:-10px;
+  font-size:60px;opacity:.12;transform:rotate(15deg);letter-spacing:-8px;
+  pointer-events:none
+}
+.hero h1{font-family:var(--serif);font-size:clamp(32px,6vw,54px);line-height:1.1;margin-bottom:10px;position:relative;z-index:1}
+.hero h1 em{font-style:normal;color:var(--o);-webkit-text-stroke:1px var(--ink)}
+.hero-sub{color:var(--ink2);font-size:14px;font-weight:500;position:relative;z-index:1}
+.hero-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.stat-card{
+  background:var(--card);border:2.5px solid var(--ink);border-radius:18px;
+  padding:18px 20px;box-shadow:4px 4px 0 var(--ink);transition:all .15s;
+  animation:fadeUp .4s ease both
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--ink)}
+.stat-num{font-family:var(--serif);font-size:36px;line-height:1;margin-bottom:4px}
+.stat-lbl{font-size:11px;color:var(--ink2);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-input{
+  width:100%;padding:11px 16px 11px 40px;
+  border:2.5px solid var(--ink);border-radius:99px;
+  background:#fff;color:var(--ink);font-size:14px;font-weight:500;
+  transition:all .18s;box-shadow:3px 3px 0 var(--ink)
+}
+.search-input:focus{box-shadow:4px 4px 0 var(--ink);background:var(--y)}
+.search-input::placeholder{color:var(--ink3);font-weight:400}
+.search-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+
+/* ── TYPE PILLS ── */
+.type-pills{display:flex;gap:7px;flex-wrap:wrap}
+.pill{
+  padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;
+  border:2px solid var(--ink);cursor:pointer;transition:all .14s;
+  background:#fff;color:var(--ink)
+}
+.pill:hover{transform:translateY(-1px);box-shadow:2px 2px 0 var(--ink)}
+.pill.active{box-shadow:3px 3px 0 var(--ink);transform:translateY(-1px)}
+
+/* ── CARDS ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{
+  background:var(--card);border:2.5px solid var(--ink);border-radius:20px;
+  padding:18px 20px;box-shadow:4px 4px 0 var(--ink);
+  transition:all .18s;position:relative;overflow:hidden
+}
+.card:hover{transform:translate(-2px,-3px);box-shadow:6px 7px 0 var(--ink)}
+.card-stripe{height:5px;border-radius:99px;margin-bottom:14px;margin-left:-20px;margin-right:-20px;margin-top:-18px;border-bottom:2px solid var(--ink)}
+.card-body{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px}
+.card-name{font-weight:700;font-size:15px;line-height:1.3;flex:1}
+.card-del{
+  width:28px;height:28px;border-radius:8px;border:2px solid transparent;
+  background:transparent;color:var(--ink3);font-size:14px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .14s
+}
+.card-del:hover{background:#FFE0E0;color:#CC0000;border-color:#CC0000}
+.card-foot{display:flex;align-items:center;justify-content:space-between}
+.card-loc{font-size:12px;color:var(--ink2);font-weight:500;display:flex;align-items:center;gap:4px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;border:1.5px solid}
+
+/* ── EMPTY ── */
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;animation:fadeUp .3s ease}
+.empty-icon{font-size:52px;margin-bottom:14px;animation:bounce 2s ease-in-out infinite}
+.empty h3{font-family:var(--serif);font-size:22px;margin-bottom:8px}
+.empty p{color:var(--ink2);font-size:13px;margin-bottom:22px}
+
+/* ── OVERLAY ── */
+.overlay{
+  position:fixed;inset:0;background:rgba(26,26,26,0.6);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;z-index:1000;
+  padding:20px;animation:fadeIn .18s ease
+}
+.modal{
+  background:var(--card);border:3px solid var(--ink);border-radius:24px;
+  padding:30px;width:100%;max-width:440px;
+  animation:scaleIn .22s ease;box-shadow:8px 8px 0 var(--ink)
+}
+.modal-title{font-family:var(--serif);font-size:24px;margin-bottom:4px}
+.modal-sub{color:var(--ink2);font-size:13px;margin-bottom:22px;font-weight:500}
+
+/* FORM */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--ink2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select{
+  width:100%;padding:11px 14px;border:2.5px solid var(--ink);border-radius:12px;
+  font-size:14px;font-weight:500;color:var(--ink);background:#fff;
+  transition:all .15s
+}
+.field input:focus,.field select:focus{background:var(--y);box-shadow:3px 3px 0 var(--ink)}
+.field input::placeholder{color:var(--ink3);font-weight:400}
+.field select option{background:#fff}
+
+/* CODE BOX */
+.code-box{
+  background:var(--y);border:2.5px solid var(--ink);border-radius:16px;
+  padding:22px;text-align:center;margin:18px 0;box-shadow:4px 4px 0 var(--ink)
+}
+.code-label{font-size:11px;font-weight:700;color:var(--ink2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.code-value{font-family:var(--serif);font-size:44px;color:var(--o);letter-spacing:8px;line-height:1;-webkit-text-stroke:1px var(--ink)}
+.code-note{font-size:12px;color:var(--ink2);margin-top:10px;line-height:1.7;font-weight:500}
+.code-note strong{color:#CC0000}
+
+/* CODE INPUT */
+.code-input{
+  width:100%;padding:14px;border:2.5px solid var(--ink);border-radius:12px;
+  font-size:28px;letter-spacing:8px;text-align:center;
+  font-family:var(--serif);color:var(--ink);
+  text-transform:uppercase;background:#fff;transition:all .15s
+}
+.code-input:focus{background:var(--y);box-shadow:4px 4px 0 var(--ink)}
+.code-input.err{border-color:#CC0000!important;background:#FFE0E0!important;animation:wiggle .3s ease}
+.err-msg{color:#CC0000;font-size:12px;margin-top:6px;text-align:center;font-weight:600;display:none}
+
+/* MODAL ACTIONS */
+.modal-actions{display:flex;gap:8px;margin-top:20px}
+.modal-actions .btn{flex:1;justify-content:center;padding:12px}
+
+/* INFO BOX */
+.info-box{
+  background:#FFF3CD;border:2px solid var(--y2);border-radius:12px;
+  padding:11px 14px;font-size:12px;font-weight:600;color:#8A6000;
+  display:flex;gap:8px;margin:14px 0;align-items:flex-start
+}
+
+/* SUCCESS */
+.suc-icon{
+  width:60px;height:60px;border:3px solid var(--ink);border-radius:16px;
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  margin:0 auto 14px;animation:pop .5s ease;box-shadow:3px 3px 0 var(--ink)
+}
+
+/* SPINNER */
+.spinner{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:currentColor;border-radius:50%;animation:spin .65s linear infinite}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  padding:12px 22px;border-radius:99px;font-weight:700;font-size:13px;
+  z-index:2000;white-space:nowrap;display:none;
+  animation:slideUp .25s ease;border:2.5px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink)
+}
+
+/* RANDOM */
+.rspin{font-size:52px;animation:wiggle .4s ease-in-out infinite;display:block;margin:0 auto}
+.rresult{
+  border:2.5px solid var(--ink);border-radius:16px;padding:24px;
+  text-align:center;animation:scaleIn .3s ease;
+  box-shadow:4px 4px 0 var(--ink)
+}
+.rresult .rname{font-family:var(--serif);font-size:28px;margin:12px 0 8px}
+.rresult .rloc{font-size:13px;color:var(--ink2);font-weight:500}
+
+/* RESULT COUNT */
+.rcount{font-size:12px;color:var(--ink2);font-weight:600;margin-bottom:14px}
+
+/* ── ADMIN PAGE ── */
+.adm-page{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:36px 20px 80px}
+.adm-banner{
+  background:var(--o);border:3px solid var(--ink);border-radius:20px;
+  padding:24px 28px;margin-bottom:24px;box-shadow:5px 5px 0 var(--ink)
+}
+.adm-banner h2{font-family:var(--serif);font-size:28px;color:#fff;margin-bottom:4px;text-shadow:1px 1px 0 var(--ink)}
+.adm-banner p{font-size:13px;color:rgba(255,255,255,.8);font-weight:500}
+.adm-warn{
+  background:#FFE0E0;border:2px solid #CC0000;border-radius:12px;
+  padding:12px 16px;margin-bottom:22px;font-size:12px;
+  color:#CC0000;font-weight:600;display:flex;gap:8px
+}
+.adm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.asc{
+  background:#fff;border:2.5px solid var(--ink);border-radius:16px;
+  padding:16px;box-shadow:3px 3px 0 var(--ink)
+}
+.asc-n{font-family:var(--serif);font-size:32px;margin-bottom:4px}
+.asc-l{font-size:11px;color:var(--ink2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.adm-srch{
+  width:100%;padding:11px 16px;border:2.5px solid var(--ink);border-radius:12px;
+  font-size:14px;font-family:var(--sans);font-weight:500;
+  color:var(--ink);background:#fff;margin-bottom:12px;transition:all .15s
+}
+.adm-srch:focus{background:var(--y);box-shadow:3px 3px 0 var(--ink);outline:none}
+.adm-srch::placeholder{color:var(--ink3)}
+.adm-tbl{background:#fff;border:2.5px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
+.adm-th{display:grid;grid-template-columns:1fr 130px 140px 80px;gap:10px;padding:12px 18px;border-bottom:2px solid var(--ink);font-size:11px;color:var(--ink2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:var(--bg)}
+.adm-tr{display:grid;grid-template-columns:1fr 130px 140px 80px;gap:10px;padding:13px 18px;border-bottom:1.5px solid var(--border);align-items:center;font-size:13px;transition:background .12s}
+.adm-tr:last-child{border-bottom:none}
+.adm-tr:hover{background:#FFF9F0}
+.adm-n{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adm-l{color:var(--ink2);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adm-dbtn{background:#FFE0E0;color:#CC0000;border:1.5px solid #CC0000;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.adm-dbtn:hover{background:#CC0000;color:#fff}
+.adm-empty{padding:40px;text-align:center;color:var(--ink2);font-weight:500}
+.adm-back{margin-top:18px;background:#fff;border:2.5px solid var(--ink);color:var(--ink);padding:10px 20px;border-radius:99px;font-size:13px;cursor:pointer;font-family:var(--sans);font-weight:700;box-shadow:3px 3px 0 var(--ink);transition:all .15s}
+.adm-back:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.adm-hint{
+  background:var(--y);border:2px solid var(--ink);border-radius:12px;
+  padding:14px 18px;margin-bottom:20px;font-size:12px;font-weight:600;
+  color:var(--ink);box-shadow:3px 3px 0 var(--ink)
+}
+.adm-hint code{background:var(--ink);color:var(--y);padding:2px 8px;border-radius:6px;font-size:12px}
+
+@media(max-width:640px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stats-row .stat-card:last-child{grid-column:1/-1}
+  .adm-th,.adm-tr{grid-template-columns:1fr 90px 70px}
+  .adm-th span:nth-child(3),.adm-l{display:none}
+  .hero{padding:24px}
+  .type-pills{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app-main" class="app">
+  <div class="topbar">
+    <div class="logo">
+      <span class="logo-emoji">🍜</span>
+      <div>
+        <div class="logo-text">หิวแล้ว<span>!</span></div>
+        <div class="tagline">ร้านอาหารโดยทีม เพื่อทีม 🔥</div>
+      </div>
+    </div>
+    <div class="topbar-btns">
+      <button class="btn btn-p btn-sm" onclick="openRandom()">🎲 สุ่มเลย!</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>วันนี้กิน<em>อะไร</em><br/>ดีอ่ะ? 🤔</h1>
+    <p class="hero-sub" id="hero-sub">รวมร้านดังโดยเพื่อนในออฟฟิส — เพิ่มได้เลย ไม่ต้องสมัคร</p>
+    <div class="hero-actions">
+      <button class="btn btn-o" onclick="openAdd()">+ บอกต่อร้านโปรด</button>
+      <button class="btn btn-ghost" onclick="openRandom()">🎲 สุ่มร้านให้เลย</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card" style="animation-delay:.05s;background:var(--p);border-color:var(--p2)">
+      <div class="stat-num" style="color:#fff" id="stat-total">0</div>
+      <div class="stat-lbl" style="color:rgba(255,255,255,.7)">ร้านทั้งหมด 🏪</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.1s;background:var(--b)">
+      <div class="stat-num" style="color:#fff" id="stat-types">0</div>
+      <div class="stat-lbl" style="color:rgba(255,255,255,.7)">ประเภทอาหาร 🍽️</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.15s;background:var(--g)">
+      <div class="stat-num" id="stat-latest" style="color:#fff;font-size:16px;padding-top:4px">-</div>
+      <div class="stat-lbl" style="color:rgba(255,255,255,.7)">ล่าสุด ✨</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-input" id="si" placeholder="ค้นหาร้าน หรือย่านที่อยู่..." oninput="renderGrid()"/>
+    </div>
+  </div>
+  <div class="type-pills" id="type-pills" style="margin-bottom:16px"></div>
+  <div id="rc" class="rcount" style="display:none"></div>
+  <div id="grid" class="cards"></div>
+</div>
+
+<!-- ADMIN PAGE (hidden — accessible via ?admin=key only) -->
+<div id="admin-page" style="display:none;min-height:100vh">
+  <div class="adm-page">
+    <div class="adm-banner">
+      <h2>⚙️ Admin Panel</h2>
+      <p>หน้านี้ลับ — user ทั่วไปไม่รู้ว่ามีอยู่</p>
+    </div>
+    <div class="adm-hint">
+      💡 ในระบบจริง เข้าได้ผ่าน URL: <code>?admin=yourSecretKey</code> — ไม่มีปุ่มบน UI
+    </div>
+    <div class="adm-warn">⚠️ หน้านี้ลบร้านได้โดยไม่ต้องใส่ delete code — ห้าม share URL ให้ใคร!</div>
+    <div class="adm-stats" id="adm-stats"></div>
+    <input class="adm-srch" id="adm-si" placeholder="🔍 ค้นหาร้าน..." oninput="renderAdmTbl(this.value)"/>
+    <div class="adm-tbl">
+      <div class="adm-th"><span>ชื่อร้าน</span><span>ประเภท</span><span>ที่อยู่</span><span>จัดการ</span></div>
+      <div id="adm-tbody"></div>
+    </div>
+    <button class="adm-back" onclick="closeAdmin()">← กลับหน้าหลัก</button>
+  </div>
+</div>
+
+<div id="ov" style="display:none"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   CONFIG — เปลี่ยน API_URL ถ้า deploy ที่อื่น
+   เมื่อรันใน Docker ผ่าน nginx proxy ใช้ '' (empty) ได้เลย
+   ══════════════════════════════════════════════════════════ */
+const API_URL    = '';               // '' = same origin (nginx proxy), or 'http://localhost:4000'
+const ADMIN_KEY  = 'lunch-admin-2024'; // ← ต้องตรงกับ ADMIN_KEY ใน .env
+
+/* ── TYPE COLORS ── */
+const TC={
+  "อาหารไทย":      {bg:"#FFF3CD", border:"#FFB800", tx:"#7A5800",  stripe:"#FFD000"},
+  "อาหารญี่ปุ่น":   {bg:"#FFE8E8", border:"#FF6B6B", tx:"#CC0000",  stripe:"#FF5757"},
+  "อาหารอีสาน":    {bg:"#FFF0E0", border:"#FF9E4F", tx:"#B85000",  stripe:"#FF7A30"},
+  "อาหารทะเล":     {bg:"#E0F5FF", border:"#38BEFF", tx:"#006699",  stripe:"#38BEFF"},
+  "อาหารอิตาเลียน":{bg:"#F3E8FF", border:"#C87DFF", tx:"#7B2FBE",  stripe:"#C87DFF"},
+  "อาหารจีน":      {bg:"#FFE8EC", border:"#FF6B9D", tx:"#C0005A",  stripe:"#FF6B9D"},
+  "อาหารเกาหลี":   {bg:"#E8FFF0", border:"#2ECC8A", tx:"#007A45",  stripe:"#2ECC8A"},
+  "อาหารอื่นๆ":    {bg:"#F0F0F0", border:"#888",    tx:"#444",     stripe:"#888"},
+};
+const TYPES=Object.keys(TC);
+
+/* ── STATE ── */
+let DB=[];
+let activeType='All';
+
+/* ── HELPERS ── */
+function tagHtml(type){
+  const c=TC[type]||TC["อาหารอื่นๆ"];
+  return `<span class="tag" style="background:${c.bg};border-color:${c.border};color:${c.tx}">${type}</span>`;
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+/* ── API CALLS ── */
+async function apiFetch(path, opts={}){
+  const res = await fetch(API_URL + path, {
+    headers: { 'Content-Type': 'application/json', ...opts.headers },
+    ...opts,
+  });
+  const data = await res.json();
+  if(!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+async function loadRestaurants(){
+  try {
+    const q = document.getElementById('si').value.trim();
+    const t = activeType !== 'All' ? activeType : '';
+    const params = new URLSearchParams();
+    if(q) params.set('search', q);
+    if(t) params.set('type', t);
+    const qs = params.toString();
+    const data = await apiFetch(`/api/restaurants${qs ? '?'+qs : ''}`);
+    DB = data.data.map(r => ({ ...r, loc: r.location }));
+    renderTicker();
+    renderPills();
+    renderGrid();
+  } catch(err){
+    console.error('Load error:', err);
+    showToast('โหลดร้านไม่ได้ 😢 ลองใหม่นะ!', '#fff', '#FF4D4D');
+  }
+}
+
+/* ── CHECK URL FOR ADMIN ── */
+function checkAdminURL(){
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get('admin');
+  if(key === ADMIN_KEY){
+    openAdmin();
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+
+/* ── TICKER ── */
+function renderTicker(){
+  if(!DB.length) return;
+  const items = DB.map(r=>`<span class="ticker-item">${r.name} <span>📍 ${r.loc}</span></span>`).join('');
+  document.getElementById('ticker-inner').innerHTML = items + items;
+}
+
+/* ── TOAST ── */
+let tTimer;
+function showToast(msg, col='#fff', bg='#1A1A1A'){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.style.background=bg; el.style.color=col;
+  el.style.display='block';
+  clearTimeout(tTimer);
+  tTimer=setTimeout(()=>el.style.display='none', 2600);
+}
+
+/* ── OVERLAY ── */
+function showOv(html, bgClick){
+  const el=document.getElementById('ov');
+  el.innerHTML=`<div class="overlay" id="ovi">${html}</div>`;
+  el.style.display='block'; document.body.style.overflow='hidden';
+  if(bgClick) document.getElementById('ovi').addEventListener('click',e=>{if(e.target.id==='ovi')bgClick();});
+}
+function closeOv(){
+  document.getElementById('ov').style.display='none';
+  document.getElementById('ov').innerHTML='';
+  document.body.style.overflow='';
+}
+
+/* ── TYPE PILLS ── */
+function renderPills(){
+  const types=['All',...new Set(DB.map(r=>r.type))];
+  document.getElementById('type-pills').innerHTML=types.map(t=>{
+    const isActive=t===activeType;
+    const col=t==='All'?'#FF7A30':TC[t]?.stripe||'#FF7A30';
+    return `<button class="pill${isActive?' active':''}"
+      style="${isActive?`background:${col};border-color:${col};color:#fff`:'background:#fff'}"
+      onclick="setType('${t}')">${t==='All'?'✦ ทั้งหมด':t}</button>`;
+  }).join('');
+}
+function setType(t){ activeType=t; loadRestaurants(); }
+
+/* ── STATS ── */
+function renderStats(){
+  document.getElementById('stat-total').textContent=DB.length;
+  document.getElementById('stat-types').textContent=[...new Set(DB.map(r=>r.type))].length;
+  const last=DB.length?DB[0].name:'ยังไม่มี';
+  document.getElementById('stat-latest').textContent=last.length>10?last.slice(0,10)+'…':last;
+  document.getElementById('hero-sub').textContent=`รวม ${DB.length} ร้านโดยทีม — เพิ่มได้เลย ไม่ต้อง login 🔥`;
+}
+
+/* ── GRID ── */
+function renderGrid(){
+  renderStats();
+  const q=document.getElementById('si').value.trim();
+  const rc=document.getElementById('rc');
+  const show=q||activeType!=='All';
+  rc.style.display=show?'block':'none';
+  if(show) rc.textContent=`เจอ ${DB.length} ร้าน ${activeType!=='All'?`ใน "${activeType}"`:''}`;
+
+  const grid=document.getElementById('grid');
+  if(!DB.length){
+    grid.innerHTML=`<div class="empty"><div class="empty-icon">🤷</div><h3>ไม่เจอร้านนี้เลยนะ!</h3><p>ลองค้นคำอื่น หรือเพิ่มร้านใหม่เลย</p><button class="btn btn-o" onclick="openAdd()">+ บอกต่อร้านโปรด</button></div>`;
+    return;
+  }
+  grid.innerHTML=DB.map((r,i)=>{
+    const c=TC[r.type]||TC["อาหารอื่นๆ"];
+    return `<div class="card" style="animation:fadeUp .28s ease ${i*.04}s both">
+      <div class="card-stripe" style="background:${c.stripe}"></div>
+      <div class="card-body">
+        <div class="card-name">${r.name}</div>
+        <button class="card-del" onclick="openDel(${r.id},'${r.name.replace(/'/g,"&#39;")}')" title="ลบร้าน">✕</button>
+      </div>
+      <div class="card-foot">
+        ${tagHtml(r.type)}
+        <div class="card-loc">📍 ${r.loc}</div>
+      </div>
+    </div>`;}).join('');
+}
+
+/* ── SEARCH (debounced) ── */
+let searchTimer;
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('si').addEventListener('input', ()=>{
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(loadRestaurants, 300);
+  });
+});
+
+/* ── ADD ── */
+function openAdd(){
+  showOv(`
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-title">+ บอกต่อร้านโปรด 🍽️</div>
+      <div class="modal-sub">แนะนำร้านให้เพื่อนๆ ในทีมรู้จักด้วย!</div>
+      <div class="field"><label>ชื่อร้าน 🏪</label>
+        <input id="fn" placeholder="เช่น ข้าวมันไก่ต้นแบบ" oninput="chkAdd()"/></div>
+      <div class="field"><label>ประเภทอาหาร 🍜</label>
+        <select id="ft">${TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="field"><label>ย่าน / ที่อยู่ 📍</label>
+        <input id="fl" placeholder="เช่น สีลม, ทองหล่อ" oninput="chkAdd()"/></div>
+      <div class="info-box">⚠️ จะได้ <strong>delete code 6 หลัก</strong> — เก็บไว้ด้วยนะถ้าอยากลบทีหลัง!</div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeOv()">ยกเลิก</button>
+        <button class="btn btn-o" id="abtn" onclick="submitAdd()" disabled>เพิ่มร้านเลย! →</button>
+      </div>
+    </div>`,closeOv);
+}
+function chkAdd(){
+  const ok=document.getElementById('fn')?.value.trim()&&document.getElementById('fl')?.value.trim();
+  const b=document.getElementById('abtn'); if(b) b.disabled=!ok;
+}
+async function submitAdd(){
+  const name=document.getElementById('fn').value.trim();
+  const type=document.getElementById('ft').value;
+  const location=document.getElementById('fl').value.trim();
+  if(!name||!location) return;
+  const b=document.getElementById('abtn');
+  b.disabled=true; b.innerHTML=`<span class="spinner"></span> กำลังเพิ่ม...`;
+  try {
+    const data = await apiFetch('/api/restaurants', {
+      method: 'POST',
+      body: JSON.stringify({ name, type, location }),
+    });
+    await loadRestaurants();
+    const code = data.delete_code;
+    showOv(`
+      <div class="modal" onclick="event.stopPropagation()">
+        <div style="text-align:center">
+          <div class="suc-icon" style="background:var(--g);border-color:var(--g2)">✓</div>
+          <div class="modal-title">เพิ่มแล้ว! 🎉</div>
+          <div style="color:var(--ink2);font-size:13px;margin:4px 0 2px;font-weight:500">${name}</div>
+          <div class="code-box">
+            <div class="code-label">🔑 Delete Code — เซฟไว้ด้วยนะ!</div>
+            <div class="code-value">${code}</div>
+            <div class="code-note">ใช้รหัสนี้ถ้าอยากลบร้านทีหลัง<br><strong>โชว์แค่ครั้งเดียว ไม่มีครั้งสอง!</strong></div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-bottom:12px" onclick="cpCode('${code}')">📋 คัดลอกรหัส</button>
+          <button class="btn btn-y" style="width:100%" onclick="closeOv()">เสร็จแล้ว 👌</button>
+        </div>
+      </div>`);
+  } catch(err){
+    b.disabled=false; b.innerHTML='เพิ่มร้านเลย! →';
+    showToast('เพิ่มไม่ได้ 😢 '+err.message, '#fff', '#FF4D4D');
+  }
+}
+function cpCode(c){
+  navigator.clipboard?.writeText(c)
+    .then(()=>showToast('📋 คัดลอกแล้ว!', '#1A1A1A', '#FFE23A'))
+    .catch(()=>showToast('บันทึกเองด้วยนะ!', '#fff', '#FF4D4D'));
+}
+
+/* ── DELETE ── */
+function openDel(id, name){
+  showOv(`
+    <div class="modal" onclick="event.stopPropagation()">
+      <div style="text-align:center;margin-bottom:20px">
+        <div class="suc-icon" style="background:#FFE0E0;border-color:#CC0000;color:#CC0000">🗑️</div>
+        <div class="modal-title">ลบร้านนี้เหรอ? 😱</div>
+        <div style="color:var(--ink2);font-size:13px;margin-top:4px;font-weight:600">${name}</div>
+      </div>
+      <div class="field"><label>ใส่ Delete Code (6 หลัก)</label>
+        <input class="code-input" id="dc" maxlength="6" placeholder="______"
+          oninput="this.value=this.value.toUpperCase();chkDel()"
+          onkeydown="if(event.key==='Enter')submitDel(${id})"/>
+        <div class="err-msg" id="dem"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeOv()">เอาไว้ก่อน</button>
+        <button class="btn btn-red" id="dbtn" onclick="submitDel(${id})" disabled>ลบเลย 🗑️</button>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--ink3);margin-top:12px;font-weight:500">ลืม code? ติดต่อ admin</div>
+    </div>`,closeOv);
+  setTimeout(()=>document.getElementById('dc')?.focus(),80);
+}
+function chkDel(){
+  const l=document.getElementById('dc')?.value.length||0;
+  const b=document.getElementById('dbtn'); if(b) b.disabled=l<6;
+}
+async function submitDel(id){
+  const code=document.getElementById('dc').value.toUpperCase();
+  if(code.length<6) return;
+  const b=document.getElementById('dbtn');
+  b.disabled=true; b.innerHTML=`<span class="spinner"></span>`;
+  try {
+    await apiFetch(`/api/restaurants/${id}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ code }),
+    });
+    await loadRestaurants();
+    closeOv();
+    showToast('🗑️ ลบแล้ว!', '#fff', '#FF4D4D');
+  } catch(err){
+    b.innerHTML='ลบเลย 🗑️'; b.disabled=false;
+    document.getElementById('dc').value='';
+    document.getElementById('dc').classList.add('err');
+    const em=document.getElementById('dem');
+    em.style.display='block';
+    em.textContent='❌ '+err.message;
+    setTimeout(()=>document.getElementById('dc')?.classList.remove('err'),1000);
+    chkDel();
+  }
+}
+
+/* ── RANDOM ── */
+function openRandom(){
+  showOv(`
+    <div class="modal" onclick="event.stopPropagation()" style="text-align:center">
+      <div class="modal-title">🎲 สุ่มร้านให้เลย!</div>
+      <div style="color:var(--ink2);font-size:13px;margin-bottom:22px;font-weight:500">จาก ${DB.length} ร้านในลิสต์</div>
+      <div id="rb" style="min-height:130px;display:flex;align-items:center;justify-content:center">
+        <div><span class="rspin">🍽️</span><div style="color:var(--ink2);font-size:13px;margin-top:14px;font-weight:600">กำลังสุ่ม...</div></div>
+      </div>
+      <div class="modal-actions" style="margin-top:22px">
+        <button class="btn btn-ghost" onclick="closeOv()">ปิด</button>
+        <button class="btn btn-p" id="rrb" onclick="doSpin()" disabled>🎲 สุ่มใหม่!</button>
+      </div>
+    </div>`,closeOv);
+  doSpin();
+}
+async function doSpin(){
+  const b=document.getElementById('rrb'); if(b) b.disabled=true;
+  const rb=document.getElementById('rb');
+  if(rb) rb.innerHTML=`<div><span class="rspin">🍽️</span><div style="color:var(--ink2);font-size:13px;margin-top:14px;font-weight:600">กำลังสุ่ม...</div></div>`;
+  const ems=['🤤','😋','🔥','👀','💯','🎉'];
+  await sleep(900);
+  try {
+    const data = await apiFetch('/api/restaurants/random');
+    const r = data.data;
+    const c=TC[r.type]||TC["อาหารอื่นๆ"];
+    const em=ems[~~(Math.random()*ems.length)];
+    const rb2=document.getElementById('rb');
+    if(rb2) rb2.innerHTML=`
+      <div class="rresult" style="width:100%;background:${c.bg};border-color:${c.border}">
+        <div style="font-size:36px">${em}</div>
+        ${tagHtml(r.type)}
+        <div class="rname">${r.name}</div>
+        <div class="rloc">📍 ${r.location}</div>
+      </div>`;
+  } catch(err){
+    const rb2=document.getElementById('rb');
+    if(rb2) rb2.innerHTML=`<div style="color:#CC0000;font-weight:600">โหลดไม่ได้ 😢</div>`;
+  }
+  const b2=document.getElementById('rrb'); if(b2) b2.disabled=false;
+}
+
+/* ── ADMIN ── */
+let admDB=[];
+async function openAdmin(){
+  document.getElementById('app-main').style.display='none';
+  document.getElementById('admin-page').style.display='block';
+  await loadAdmData('');
+}
+async function loadAdmData(q){
+  try {
+    const qs = q ? `?search=${encodeURIComponent(q)}` : '';
+    const data = await apiFetch(`/api/admin/restaurants${qs}`, {
+      headers: { 'x-admin-key': ADMIN_KEY },
+    });
+    admDB = data.data;
+    renderAdmStats();
+    renderAdmTbl();
+  } catch(err){
+    showToast('Admin: '+err.message, '#fff', '#FF4D4D');
+  }
+}
+function closeAdmin(){
+  document.getElementById('app-main').style.display='block';
+  document.getElementById('admin-page').style.display='none';
+  document.getElementById('adm-si').value='';
+  loadRestaurants();
+}
+function renderAdmStats(){
+  const types=[...new Set(admDB.map(r=>r.type))].length;
+  const last=admDB.length?admDB[0].name:'-';
+  document.getElementById('adm-stats').innerHTML=`
+    <div class="asc"><div class="asc-n" style="color:var(--o)">${admDB.length}</div><div class="asc-l">ร้านทั้งหมด 🏪</div></div>
+    <div class="asc"><div class="asc-n" style="color:var(--b)">${types}</div><div class="asc-l">ประเภท 📂</div></div>
+    <div class="asc"><div class="asc-n" style="font-size:16px;color:var(--g);padding-top:6px">${last.slice(0,12)}${last.length>12?'…':''}</div><div class="asc-l">ล่าสุด ✨</div></div>`;
+}
+function renderAdmTbl(){
+  const body=document.getElementById('adm-tbody');
+  if(!admDB.length){body.innerHTML=`<div class="adm-empty">ไม่เจอร้านนี้</div>`;return;}
+  body.innerHTML=admDB.map(r=>`
+    <div class="adm-tr">
+      <div class="adm-n">${r.name}</div>
+      ${tagHtml(r.type)}
+      <div class="adm-l">${r.location}</div>
+      <button class="adm-dbtn" onclick="admDel(${r.id})">ลบ</button>
+    </div>`).join('');
+}
+async function admDel(id){
+  try {
+    await apiFetch(`/api/admin/restaurants/${id}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-key': ADMIN_KEY },
+    });
+    await loadAdmData(document.getElementById('adm-si').value);
+    showToast('🗑️ ลบแล้ว!', '#fff', '#FF4D4D');
+  } catch(err){
+    showToast('ลบไม่ได้: '+err.message, '#fff', '#FF4D4D');
+  }
+}
+
+/* ── INIT ── */
+checkAdminURL();
+loadRestaurants();
+</script>
+</body>
+</html>
